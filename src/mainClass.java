@@ -22,12 +22,17 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-import org.openweathermap.api.DataWeatherClient;
-import org.openweathermap.api.UrlConnectionDataWeatherClient;
-import org.openweathermap.api.model.currentweather.CurrentWeather;
-import org.openweathermap.api.query.*;
-import org.openweathermap.api.query.currentweather.CurrentWeatherOneLocationQuery;
+import com.google.gson.*;
+import com.google.gson.reflect.*;
 
 public class mainClass {
 
@@ -107,11 +112,55 @@ public class mainClass {
 //	     String testInput = testAd.adSeason;
 //	     System.out.println("testInput "+testInput);
 	     	
-	     URL url = new URL("api.openweathermap.org/data/2.5/weather?q=London");
-	     HttpURLConnection con = (HttpURLConnection) url.openConnection();
-	     con.setRequestMethod("GET");
+		String API_KEY = "131f84a6effc0274c8e2b0260bb9dc26";
+		String LOCATION = "Dublin, IE";
+		String urlString = "http://api.openweathermap.org/data/2.5/weather?q="+LOCATION+"&appid="+API_KEY+"&units=metric";
+		try {
+			StringBuilder result = new StringBuilder();
+			URL url = new URL(urlString);
+			URLConnection conn = url.openConnection();
+			BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			String line;
+			while ((line = rd.readLine()) != null) {
+				result.append(line);
+			}
+			rd.close();
+			System.out.println(result);
+			
+			Map<String, Object> respMap = jsonToMap(result.toString());
+			Map<String, Object> mainMap = jsonToMap(respMap.get("main").toString());
+			Map<String, Object> windMap = jsonToMap(respMap.get("wind").toString());
+			
+			// Accessing array of objects isn't working
+			Map<String, Object> weatherMap = jsonToMap(respMap.get("weather").toString());
+			
+			System.out.println("Curr Temp: "+mainMap.get("temp"));
+			System.out.println("Curr Humidity: "+mainMap.get("humidity"));
+			System.out.println("Wind Speeds: "+windMap.get("speed"));
+			System.out.println("Wind Angle: "+windMap.get("deg"));
+//			System.out.println("Desc: "+weatherMap.get("main"));
+			
+			Iterator<String> itr = weatherMap.keySet().iterator();
+			while (itr.hasNext()) {
+				System.out.println(itr.next());
+			}
+			
+			for (Object key : weatherMap.values()) {
+				System.out.println("out "+key);
+			}
+			
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
+		
 
 	}
-
+	
+	// Convert JSON to Map
+	public static Map<String, Object> jsonToMap(String str) {
+		Map<String, Object> map = new Gson().fromJson(
+				str, new TypeToken<HashMap<String, Object>>() {}.getType());
+		return map;
+	}
 
 }
