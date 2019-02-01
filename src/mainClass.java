@@ -55,10 +55,10 @@ public class mainClass {
 //		seasonArray[3][0] = "Autumn.jpg";
 //		seasonArray[3][1] = "autumn";
 		
-		Advert winterAd = new Advert("winter", "Winter.jpg");
-		Advert springAd = new Advert("spring", "Spring.jpg");
-		Advert summerAd = new Advert("summer", "Summer.jpg");
-		Advert autumnAd = new Advert("autumn", "Autumn.jpg");
+		Advert winterAd = new Advert("winter", "", "Winter.jpg");
+		Advert springAd = new Advert("spring", "", "Spring.jpg");
+		Advert summerAd = new Advert("summer", "", "Summer.jpg");
+		Advert autumnAd = new Advert("autumn", "", "Autumn.jpg");
 		
 		ArrayList<Advert> advertArray = new ArrayList<Advert>();
 		advertArray.add(summerAd);
@@ -91,16 +91,6 @@ public class mainClass {
 				path = advertArray.get(i).imageSrc;
 			}
 		}
-		
-//		for (int i=0; i<seasonArray.length; i++) {
-//			if (seasonArray[i][1].equals(season)) {
-////				System.out.println(imageArray[i][0]);
-//				path = (seasonArray[i][0]);
-//				
-////			    Map f  = Files.readAttributes(path, "*");
-////			    System.out.println(f);
-//			}
-//		}
 
 		//// Print out image given path
 //		 BufferedImage img=ImageIO.read(new File(path));
@@ -114,18 +104,16 @@ public class mainClass {
 //	     frame.setVisible(true);
 //	     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	     
-//	     Advert testAd = new Advert("testseason", "testpath");
-//	     String testInput = testAd.adSeason;
-//	     System.out.println("testInput "+testInput);
 	     	
 		String API_KEY = "131f84a6effc0274c8e2b0260bb9dc26";
 		String LOCATION = "Dublin, IE";
 		String urlString = "http://api.openweathermap.org/data/2.5/weather?q="+LOCATION+"&appid="+API_KEY+"&units=metric";
 		
             String retVal = "";
+            String weatherType = "";
 
             try {
-                URL url = new URL("http://api.openweathermap.org/data/2.5/weather?q="+LOCATION+"&appid="+API_KEY+"&units=metric");
+                URL url = new URL(urlString);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 InputStream in = conn.getInputStream();
                 InputStreamReader reader = new InputStreamReader(in);
@@ -146,27 +134,55 @@ public class mainClass {
                 JSONArray partJson = json.getJSONArray("weather");
                 for (int i = 0; i < partJson.length(); i++) {
                     JSONObject weatherJSON = partJson.getJSONObject(i);
-                    String mainText = (weatherJSON.getString("main"));
+                    weatherType = (weatherJSON.getString("main"));
                     String descText = (weatherJSON.getString("description"));
-                    System.out.println("mainText "+mainText);
-                    System.out.println("descText "+descText);
+//                    System.out.println("weatherType "+weatherType);
+//                  System.out.println("descText "+descText);
                     
-                    Map<String, Object> respMap = jsonToMap(retVal.toString());
-        			Map<String, Object> mainMap = jsonToMap(respMap.get("main").toString());
-        			Map<String, Object> windMap = jsonToMap(respMap.get("wind").toString());
-        			
-        			
-        			System.out.println("Curr Temp: "+mainMap.get("temp"));
-        			System.out.println("Curr Humidity: "+mainMap.get("humidity"));
-        			System.out.println("Wind Speeds: "+windMap.get("speed"));
-        			System.out.println("Wind Angle: "+windMap.get("deg"));
+//                  Map<String, Object> respMap = jsonToMap(retVal.toString());
+//        			Map<String, Object> mainMap = jsonToMap(respMap.get("main").toString());
+
+//        			System.out.println("Curr Temp: "+mainMap.get("temp"));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         
-    
-			
+            
+            Advert clearAd = new Advert("", "Clear", "Clear.jpg");
+    		Advert cloudsAd = new Advert("", "Clouds", "Clouds.jpg");
+    		Advert drizzleAd = new Advert("", "Drizzle", "Drizzle.jpg");
+    		Advert rainAd = new Advert("", "Rain", "Rain.jpg");
+    		Advert snowAd = new Advert("", "Snow", "Snow.jpg");
+    		Advert tstormAd = new Advert("", "Thunderstorm", "Thunderstorm.jpg");
+    		
+    		advertArray.add(clearAd);
+    		advertArray.add(cloudsAd);
+    		advertArray.add(drizzleAd);
+    		advertArray.add(rainAd);
+    		advertArray.add(snowAd);
+    		advertArray.add(tstormAd);
+    		
+    		for (int i=0; i<advertArray.size(); i++) {
+//    			System.out.println("OUT1 "+advertArray.get(i).adWeather);
+    			if (advertArray.get(i).adWeather.equals(weatherType)) {
+    				path = advertArray.get(i).imageSrc;
+//    				System.out.println("OUT "+advertArray.get(i).imageSrc);
+    			}
+    		}
+
+    		//// Print out image given path
+    		 BufferedImage img=ImageIO.read(new File(path));
+    	     ImageIcon icon=new ImageIcon(img);
+    	     JFrame frame=new JFrame();
+    	     frame.setLayout(new FlowLayout());
+    	     frame.setSize(200,300);
+    	     JLabel lbl=new JLabel();
+    	     lbl.setIcon(icon);
+    	     frame.add(lbl);
+    	     frame.setVisible(true);
+    	     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    	     
 			
 			
 		
