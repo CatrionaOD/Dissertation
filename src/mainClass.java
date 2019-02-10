@@ -194,12 +194,124 @@ public class mainClass {
     		}
 //			showAd (path);
 			
-//			String EVENTS_API_KEY = "131f84a6effc0274c8e2b0260bb9dc26";
-//			String EVENTS_LOCATION = "Dublin, IE";
-//			String eventsUrlString = "https://app.ticketmaster.com/discovery/v2/events.json?size=1&apikey=Qn3VKm3dgWtS0AXLUiQ5zEIorM54bTli";
-////			String eventsUrlString = "https://api.predicthq.com/v1/events/count/?country=IE&apikey=phq.T9og95XRJGYHLmDBBte4KRo3lBYsxCU8mJmrtLDQ";
+			String EVENTS_API_KEY = "Qn3VKm3dgWtS0AXLUiQ5zEIorM54bTli";
+			String EVENTS_LOCATION = "53.345070,-6.256610";
+//			String eventsUrlString = "https://app.ticketmaster.com/discovery/v2/events.json?countryCode=IE&apikey="+EVENTS_API_KEY;
+//			String eventsUrlString = "https://api.predicthq.com/v1/events/count/?country=IE&apikey=phq.T9og95XRJGYHLmDBBte4KRo3lBYsxCU8mJmrtLDQ";
+//			53.345070,-6.256610
+			int NUM_PAGES = 20;
+			String eventsUrlString = "https://app.ticketmaster.com/discovery/v2/events?apikey="+EVENTS_API_KEY+"&radius=20&size="+NUM_PAGES+"&unit=km&geoPoint="+EVENTS_LOCATION;
+//			String eventsClassificationsUrlString = "https://app.ticketmaster.com/discovery/v2/classifications?apikey="+EVENTS_API_KEY;
+
+			
+			String ticketMasterReturn = "";
+			try {
+                URL url = new URL(eventsUrlString);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                InputStream in = conn.getInputStream();
+                InputStreamReader reader = new InputStreamReader(in);
+                int data = reader.read();
+                while (data != -1) {
+                    char c = (char) data;
+                    ticketMasterReturn += c;
+                    data = reader.read();
+                }
+
+//                System.out.println("ticketmaster: "+ticketMasterReturn+"\n");
+            } catch (Exception e) {
+            	System.out.println(e);
+            }
+			
+//			String eventsClassifications = "";
+//			try {
+//                URL url = new URL(eventsClassificationsUrlString);
+//                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//                InputStream in = conn.getInputStream();
+//                InputStreamReader reader = new InputStreamReader(in);
+//                int data = reader.read();
+//                while (data != -1) {
+//                    char c = (char) data;
+//                    eventsClassifications += c;
+//                    data = reader.read();
+//                }
+
+//                System.out.println("Classifications: "+eventsClassifications);
+//                
+//            } catch (Exception e) {
+//            	System.out.println(e);
+//            }
+			
+			
+			String eventName = "";
+			String eventName2 = "";
+			try {
+                JSONObject json = new JSONObject(ticketMasterReturn);                    
+              
+
+                        @SuppressWarnings("unchecked")
+                        Map<String, String> map = new Gson().fromJson(json.toString(),Map.class);
+//                        System.out.println(map);
+                        
+//                        System.out.println("TOSTRING "+map.toString());
+                        String details = map.toString();
+                        
+                   ArrayList<String> eventGenres = new ArrayList<String>();     
+                   int endIndex = 0;     
+                   int size = details.length();
+//                   while (endIndex != details.length()) {     
+                   for (int i=0; i<details.length(); i+=endIndex) {
+                	   int startIndex = details.indexOf("genre={name=");
+                     endIndex = details.indexOf(" ", startIndex);
+                     if (endIndex == -1) {
+                         endIndex = details.length();
+                     }
+                     String link = details.substring(startIndex+12, endIndex-1);
+//                     System.out.println("LINK "+link);
+                     details = details.substring(endIndex+startIndex);
+//                     int nextIndex = details.indexOf("genre={name=");
+                     eventGenres.add(link);
+                   }
+                   
+                   System.out.println("Genres: "+eventGenres.toString());
+                   
+//                        System.out.println("genres "+eventGenres.toString());
+//                        
+//                        JSONObject obj2 = (JSONObject)json.get("_embedded");
+//                        System.out.println("Field \"1\"");
+////                        System.out.println(obj2.get("events"));   
+//                        obj2 = (JSONObject)obj2.get("events");
+//                        System.out.println(obj2.toString());
+//                        
+//                        int startIndex = details.indexOf("genre={name=");
+//                        endIndex = details.indexOf(" ", startIndex);
+//                        if (endIndex == -1) {
+//                            endIndex = details.length();
+//                        }
+//                        String link = details.substring(startIndex+12, endIndex-1);
+//                        System.out.println("LINK "+link);
+//                
+//                }
+//                    Map<String, Object> respMap = jsonToMap(ticketMasterReturn.toString());
+//        			Map<String, Object> mainMap = jsonToMap(respMap.get("embedded").toString());
+//
+//        			eventName2 =  (String) mainMap.get("events");
+//        			eventName =  (String) respMap.get("subGenre");
+//        			System.out.println("Curr Temp: "+eventName);
+//        			System.out.println("2 Temp: "+eventName2);
+////                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+			
+			
+			
+			
+			
+			
+//			String MAPS_API_KEY = "AIzaSyD_Yzb_x6GQhtsUnyXLFPD2yfMdKvvMJZs";
+//			String eventsUrlString = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=53.345070,-6.256610&radius=100&key="+MAPS_API_KEY;
 //			
-//			String ticketMasterReturn = "";
+//			String mapsMasterReturn = "";
 //			try {
 //                URL url = new URL(eventsUrlString);
 //                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -208,14 +320,36 @@ public class mainClass {
 //                int data = reader.read();
 //                while (data != -1) {
 //                    char c = (char) data;
-//                    ticketMasterReturn += c;
+//                    mapsMasterReturn += c;
 //                    data = reader.read();
 //                }
 //
-//                System.out.println("ticketmaster: "+ticketMasterReturn);
+//                System.out.println("Maps: "+mapsMasterReturn);
 //            } catch (Exception e) {
 //            	System.out.println(e);
 //            }
+//			String mapsType = "";
+//			
+//			 try {
+//	                JSONObject json = new JSONObject(retVal);
+//	                JSONArray partJson = json.getJSONArray("results");
+//	                for (int i = 0; i < partJson.length(); i++) {
+//	                    JSONObject mapsJSON = partJson.getJSONObject(i);
+//	                    mapsType = (mapsJSON.getString("name"));
+//	                    String descText = (mapsJSON.getString("description"));
+////	                    System.out.println("weatherType "+weatherType);
+////	                  System.out.println("descText "+descText);
+//	                    
+//	                    Map<String, Object> respMap = jsonToMap(retVal.toString());
+//	        			Map<String, Object> mainMap = jsonToMap(respMap.get("main").toString());
+//
+//	        			currTemp =  (double) mainMap.get("temp");
+////	        			System.out.println("Curr Temp: "+currTemp);
+//	                }
+//	            } catch (JSONException e) {
+//	                e.printStackTrace();
+//	            }
+			
 	}
 	
 	// Convert JSON to Map
