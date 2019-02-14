@@ -4,6 +4,7 @@ import java.sql.Wrapper;
 import java.text.DecimalFormat;
 import java.io.*;
 import java.util.Map;
+import java.util.Scanner;
 
 import javax.swing.ImageIcon;
 
@@ -14,8 +15,6 @@ import java.util.Calendar;
 
 import java.awt.FlowLayout;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -28,17 +27,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.google.gson.*;
 import com.google.gson.reflect.*;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+
 
 public class mainClass {
 
@@ -200,113 +204,127 @@ public class mainClass {
 //			String eventsUrlString = "https://api.predicthq.com/v1/events/count/?country=IE&apikey=phq.T9og95XRJGYHLmDBBte4KRo3lBYsxCU8mJmrtLDQ";
 //			53.345070,-6.256610
 			int NUM_PAGES = 20;
-			String eventsUrlString = "https://app.ticketmaster.com/discovery/v2/events?apikey="+EVENTS_API_KEY+"&radius=20&size="+NUM_PAGES+"&unit=km&geoPoint="+EVENTS_LOCATION;
+//			String eventsUrlString = "https://app.ticketmaster.com/discovery/v2/events?apikey="+EVENTS_API_KEY+"&radius=20&size="+NUM_PAGES+"&unit=km&geoPoint="+EVENTS_LOCATION;
+			String classifications = "https://app.ticketmaster.com/discovery/v2/classifications?&events?apikey="+EVENTS_API_KEY;
 //			String eventsClassificationsUrlString = "https://app.ticketmaster.com/discovery/v2/classifications?apikey="+EVENTS_API_KEY;
 
 			
-			String ticketMasterReturn = "";
-			try {
-                URL url = new URL(eventsUrlString);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                InputStream in = conn.getInputStream();
-                InputStreamReader reader = new InputStreamReader(in);
-                int data = reader.read();
-                while (data != -1) {
-                    char c = (char) data;
-                    ticketMasterReturn += c;
-                    data = reader.read();
-                }
-
-//                System.out.println("ticketmaster: "+ticketMasterReturn+"\n");
-            } catch (Exception e) {
-            	System.out.println(e);
-            }
-			
-//			String eventsClassifications = "";
+//			String ticketMasterReturn = "";
 //			try {
-//                URL url = new URL(eventsClassificationsUrlString);
+//                URL url = new URL(classifications);
 //                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 //                InputStream in = conn.getInputStream();
 //                InputStreamReader reader = new InputStreamReader(in);
 //                int data = reader.read();
 //                while (data != -1) {
 //                    char c = (char) data;
-//                    eventsClassifications += c;
+//                    ticketMasterReturn += c;
 //                    data = reader.read();
 //                }
-
-//                System.out.println("Classifications: "+eventsClassifications);
+//
+//                System.out.println("classifications: "+ticketMasterReturn+"\n");
+//            } catch (Exception e) {
+//            	System.out.println(e);
+//            }
+			
+			// Prints Genre ArrayList but is a bit slow
+//			String eventName = "";
+//			String eventName2 = "";
+//			try {
+//                JSONObject json = new JSONObject(ticketMasterReturn);                    
+//              
+//
+//                        @SuppressWarnings("unchecked")
+//                        Map<String, String> map = new Gson().fromJson(json.toString(),Map.class);
+////                        System.out.println(map);
+//                        
+////                        System.out.println("TOSTRING "+map.toString());
+//                        String details = map.toString();
+//                        
+//                   ArrayList<String> eventGenres = new ArrayList<String>();     
+//                   int endIndex = 0;     
+//                   int size = details.length();
+////                   while (endIndex != details.length()) {     
+//                   for (int i=0; i<details.length(); i+=endIndex) {
+//                	   int startIndex = details.indexOf("genre={name=");
+//                     endIndex = details.indexOf(" ", startIndex);
+//                     if (endIndex == -1) {
+//                         endIndex = details.length();
+//                     }
+//                     String link = details.substring(startIndex+12, endIndex-1);
+////                     System.out.println("LINK "+link);
+//                     details = details.substring(endIndex+startIndex);
+////                     int nextIndex = details.indexOf("genre={name=");
+//                     eventGenres.add(link);
+//                   }
+//                   
+//                   System.out.println("Genres: "+eventGenres.toString());
+//                   
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+			
+			
+			
+//			String predictHQAccessToken = "ZbgbxZsCWaWuOAHXS12P3Wbb61pbvQ";
+//			String predictUrlString = "https://api.predicthq.com/v1/events/?apikey="+predictHQAccessToken+"&q=jazz&country=IE";
+////			String predictUrlString = "https://api.predicthq.com/v1/events/?q=jazz&country=IE";
+//			
+//			String predictHQReturn = "";
+//			try {
+//                URL url = new URL(predictUrlString);
+//                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+////                conn.setRequestMethod("GET");
+////                conn.setRequestProperty("Authorization", predictHQAccessToken);
+////
+////        		int responseCode = conn.getResponseCode();
+////        		System.out.println("\nSending 'GET' request to URL : " + url);
+////        		System.out.println("Response Code : " + responseCode);
+////
+////        		BufferedReader in = new BufferedReader(
+////        		        new InputStreamReader(conn.getInputStream()));
+////        		String inputLine;
+////        		StringBuffer response = new StringBuffer();
+////
+////        		while ((inputLine = in.readLine()) != null) {
+////        			response.append(inputLine);
+////        		}
+////        		in.close();
+////
+////        		//print result
+////        		System.out.println(response.toString());
 //                
+//                InputStream in = conn.getInputStream();
+//                InputStreamReader reader = new InputStreamReader(in);
+//                int data = reader.read();
+//                while (data != -1) {
+//                    char c = (char) data;
+//                    predictHQReturn += c;
+//                    data = reader.read();
+//			}
+//
+//                System.out.println("PredictHQ: "+predictHQReturn+"\n");
 //            } catch (Exception e) {
 //            	System.out.println(e);
 //            }
 			
 			
-			String eventName = "";
-			String eventName2 = "";
-			try {
-                JSONObject json = new JSONObject(ticketMasterReturn);                    
-              
-
-                        @SuppressWarnings("unchecked")
-                        Map<String, String> map = new Gson().fromJson(json.toString(),Map.class);
-//                        System.out.println(map);
-                        
-//                        System.out.println("TOSTRING "+map.toString());
-                        String details = map.toString();
-                        
-                   ArrayList<String> eventGenres = new ArrayList<String>();     
-                   int endIndex = 0;     
-                   int size = details.length();
-//                   while (endIndex != details.length()) {     
-                   for (int i=0; i<details.length(); i+=endIndex) {
-                	   int startIndex = details.indexOf("genre={name=");
-                     endIndex = details.indexOf(" ", startIndex);
-                     if (endIndex == -1) {
-                         endIndex = details.length();
-                     }
-                     String link = details.substring(startIndex+12, endIndex-1);
-//                     System.out.println("LINK "+link);
-                     details = details.substring(endIndex+startIndex);
-//                     int nextIndex = details.indexOf("genre={name=");
-                     eventGenres.add(link);
-                   }
-                   
-                   System.out.println("Genres: "+eventGenres.toString());
-                   
-//                        System.out.println("genres "+eventGenres.toString());
-//                        
-//                        JSONObject obj2 = (JSONObject)json.get("_embedded");
-//                        System.out.println("Field \"1\"");
-////                        System.out.println(obj2.get("events"));   
-//                        obj2 = (JSONObject)obj2.get("events");
-//                        System.out.println(obj2.toString());
-//                        
-//                        int startIndex = details.indexOf("genre={name=");
-//                        endIndex = details.indexOf(" ", startIndex);
-//                        if (endIndex == -1) {
-//                            endIndex = details.length();
-//                        }
-//                        String link = details.substring(startIndex+12, endIndex-1);
-//                        System.out.println("LINK "+link);
-//                
-//                }
-//                    Map<String, Object> respMap = jsonToMap(ticketMasterReturn.toString());
-//        			Map<String, Object> mainMap = jsonToMap(respMap.get("embedded").toString());
+//			byte[] jsonData = ticketMasterReturn.getBytes();
 //
-//        			eventName2 =  (String) mainMap.get("events");
-//        			eventName =  (String) respMap.get("subGenre");
-//        			System.out.println("Curr Temp: "+eventName);
-//        			System.out.println("2 Temp: "+eventName2);
-////                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-			
-			
-			
-			
-			
+//			ObjectMapper objectMapper = new ObjectMapper();
+//
+//			//read JSON like DOM Parser
+//			JsonNode rootNode = objectMapper.readTree(jsonData);
+//			JsonNode idNode = rootNode.path("event");
+//			System.out.println("event = "+idNode.toString());
+//
+//			JsonNode phoneNosNode = rootNode.path("classifications");
+//			Iterator<JsonNode> elements = phoneNosNode.elements();
+//			while(elements.hasNext()){
+//				JsonNode phone = elements.next();
+//				System.out.println("Phone No = "+phone.toString());
+//			}
+//			System.out.println("Event \n"+event);
 			
 //			String MAPS_API_KEY = "AIzaSyD_Yzb_x6GQhtsUnyXLFPD2yfMdKvvMJZs";
 //			String eventsUrlString = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=53.345070,-6.256610&radius=100&key="+MAPS_API_KEY;
@@ -350,7 +368,148 @@ public class mainClass {
 //	                e.printStackTrace();
 //	            }
 			
-	}
+			// Work with census data			
+//			 try { 
+			        // Create an object of file reader 
+			        // class with CSV file as a parameter. 
+//			        FileReader filereader = new FileReader("DublinCityCensus.csv"); 
+//			  
+//			        // create csvReader object and skip first Line 
+//			        CSVReader csvReader = new CSVReaderBuilder(filereader) 
+//			                                  .withSkipLines(5) 
+//			                                  .build(); 
+//			        List<String[]> allData = csvReader.readAll(); 
+//			  
+//			        // print Data 
+//			        for (String[] row : allData) { 
+//			            for (String cell : row) { 
+//			                System.out.print(cell + "\t"); 
+//			            } 
+//			            System.out.println();
+//			        } 
+//			    } 
+//			    catch (Exception e) { 
+//			        e.printStackTrace(); 
+//			    } 
+				 String fileToParse = "DublinCityCensus.csv";
+			        BufferedReader fileReader = null;
+			        boolean allSocEcGroups = false;
+			        boolean highEarners = false;
+//			        boolean higherMidEarners = false;
+//			        boolean lowerMidEarners = false;
+			        boolean lowEarners = false;
+			        
+			        double noAllSocEcGroups = 0;
+			        double noHighEarners = 0;
+//			        double noHigherMidEarners = 0;
+//			        double noLowerMidEarners = 0;
+			        double noLowEarners = 0;
+			        
+			        int propHighEarners = 0;
+//			        int propHigherMidEarners = 0;
+//			        int propLowerMidEarners = 0;
+			        int propLowEarners = 0;
+			         
+			        //Delimiter used in CSV file
+			        final String DELIMITER = ",";
+			        try
+			        {
+			            String line = "";
+			            //Create the file reader
+			            fileReader = new BufferedReader(new FileReader(fileToParse));
+			             
+			            //Read the file line by line
+			            while ((line = fileReader.readLine()) != null)
+			            {
+			                //Get all tokens available in line
+			                String[] tokens = line.split(DELIMITER);
+			                for(String token : tokens)
+			                {
+			                    //Print all tokens
+//			                    System.out.println(token);
+			                	if (allSocEcGroups) {
+//			                		System.out.println("TOKEN "+token);
+			                		noAllSocEcGroups = Integer.parseInt(token);
+			                		allSocEcGroups = false;
+			                	}
+			                	
+			                    if (token.contains("All socio-economic groups")) {
+////			                    	System.out.println("FOUND");
+			                    	allSocEcGroups = true;
+			                    }
+			                	if (highEarners) {
+//			                		System.out.println("highEarners "+token);
+			                		noHighEarners += Integer.parseInt(token); 
+			                		highEarners = false;
+			                	}
+			                	else if (lowEarners) {
+//			                		System.out.println("lowEarners "+token);
+			                		noLowEarners += Integer.parseInt(token); 
+			                		lowEarners = false;
+			                	}
+//			                	else if (higherMidEarners) {
+////			                		System.out.println("higherMidEarners "+token);
+//			                		noHigherMidEarners += Integer.parseInt(token); 
+//			                		higherMidEarners = false;
+//			                	}
+//			                	else if (lowerMidEarners) {
+////			                		System.out.println("lowerMidEarners "+token);
+//			                		noLowerMidEarners += Integer.parseInt(token); 
+//			                		lowerMidEarners = false;
+//			                	}		                	
+			                	
+			                    if ((token.contains("Employers"))|| (token.contains("Higher"))){
+//			                    	System.out.println("FOUND");
+			                    	highEarners = true;
+			                    }
+//			                    else if ((token.contains("Lower"))|| (token.contains("Non-manual"))) {
+////			                    	System.out.println("FOUND");
+//			                    	higherMidEarners = true;
+//			                    }
+//			                    else if ((token.contains("Manual skilled"))|| (token.contains("Semi-skilled"))) {
+////			                    	System.out.println("FOUND");
+//			                    	lowerMidEarners = true;
+//			                    }
+			                    else if (token.contains("Unskilled")) {
+//			                    	System.out.println("FOUND");
+			                    	lowEarners = true;
+			                    }
+			                    
+			                }
+			                
+			            }		                
+				        propHighEarners = (int) ((noHighEarners / noAllSocEcGroups)*100);
+//				        propHigherMidEarners = (int) ((noHigherMidEarners / noAllSocEcGroups)*100);
+//				        propLowerMidEarners = (int) ((noLowerMidEarners / noAllSocEcGroups)*100);
+				        propLowEarners = (int) ((noLowEarners / noAllSocEcGroups)*100);
+				        
+				        int highEarnerAvg = 41;
+//				        int highEarnerSD = 20;
+				        int unskilledAvg = 3;
+//				        int lowEarnerSD = 1;
+				        
+			            System.out.println("propHighEarners "+propHighEarners);
+//			            System.out.println("propHigherMidEarners "+propHigherMidEarners);
+//		                System.out.println("propLowerMidEarners "+propLowerMidEarners);
+		                System.out.println("propLowEarners "+propLowEarners);
+		                
+		                
+			        }
+			        catch (Exception e) {
+			            e.printStackTrace();
+			        }
+			        finally
+			        {
+			            try {
+			                fileReader.close();
+			            } catch (IOException e) {
+			                e.printStackTrace();
+			            }
+			        }
+			 
+	
+	
+}
 	
 	// Convert JSON to Map
 	public static Map<String, Object> jsonToMap(String str) {

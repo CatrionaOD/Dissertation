@@ -5,6 +5,7 @@ public class Advert {
 	public String imageSrc;
 	public String adWeather;
 	public String adTemp;
+	public String eventType;
 
 	public Advert(String seasonIn, String weatherIn, String tempIn, String imagePath) {
 //		if ((seasonIn.equals("spring"))||(seasonIn.equals("summer"))||(seasonIn.equals("autumn"))||(seasonIn.equals("winter"))) {

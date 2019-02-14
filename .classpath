@@ -4,5 +4,9 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="C:/Users/Catríona/Downloads/gson-2.6.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Catríona/Downloads/org.json.jar/org.json.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Catríona/Downloads/jackson-core-2.2.3.jar/jackson-core-2.2.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Catríona/Downloads/com.fasterxml.jackson.databind.jar/com.fasterxml.jackson.databind.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Catríona/Downloads/opencsv-4.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Catríona/Downloads/commons-lang3-3.8.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
