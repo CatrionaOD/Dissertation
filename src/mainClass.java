@@ -417,7 +417,7 @@ public class mainClass {
 			                		highEarners = false;
 			                	}
 			                	else if (lowEarners) {
-//			                		System.out.println("lowEarners "+token);
+//			                		System.out.println("TOTALlowEarners "+token);
 			                		noLowEarners += Integer.parseInt(token); 
 			                		lowEarners = false;
 			                	}	                	
@@ -460,11 +460,11 @@ public class mainClass {
 		                else if ((highEarnerRanking <= 0.75)&&(highEarnerRanking >= 0.5)) {
 		                	areaEarnerStatus = "High Earning";
 		                }
+		                else if ((lowEarnerRanking < 0.75)&&(lowEarnerRanking >= 0.5)) {
+		                	areaEarnerStatus ="Low Earning";
+		                }
 		                else if (lowEarnerRanking >= 0.75) {
 		                	areaEarnerStatus ="Very Low Earning";
-		                }
-		                else if ((lowEarnerRanking <= 0.75)&&(lowEarnerRanking >= 0.5)) {
-		                	areaEarnerStatus ="Low Earning";
 		                }
 		                
 			        }
