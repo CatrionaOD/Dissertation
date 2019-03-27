@@ -21,6 +21,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
+import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import javax.script.SimpleScriptContext;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -54,7 +59,7 @@ public class mainClass {
 	static ArrayList<Advert> advertArray = new ArrayList<Advert>();
 	static int index = 0;
 	
-	public static void main(String[] args) throws IOException, JSONException {		
+	public static void main(String[] args) throws IOException, JSONException, ScriptException {		
 		String season = " ";
 
 		String path = "";
@@ -230,67 +235,70 @@ public class mainClass {
 //	            }
 					
 				 String fileToParse = "DublinCityCensus.csv";
+				 ArrayList<Advert> advertArray = new ArrayList<Advert>();
 				 
-					Advert winterAd = new Advert("winter", "", "", "", "Winter.jpg");
-					Advert springAd = new Advert("spring", "", "", "", "Spring.jpg");
-					Advert summerAd = new Advert("summer", "", "", "", "Summer.jpg");
-					Advert autumnAd = new Advert("autumn", "", "", "", "Autumn.jpg");
-					
-//					ArrayList<Advert> advertArray = new ArrayList<Advert>();
-					advertArray.add(summerAd);
-					advertArray.add(winterAd);
-					advertArray.add(springAd);
-					advertArray.add(autumnAd);
-				 
-				 Advert clearAd = new Advert("", "Clear", "", "", "Clear.jpg");
-		    		Advert cloudsAd = new Advert("", "Clouds", "", "", "Clouds.jpg");
-		    		Advert drizzleAd = new Advert("", "Drizzle", "", "", "Drizzle.jpg");
-		    		Advert rainAd = new Advert("", "Rain", "", "", "Rain.jpg");
-		    		Advert snowAd = new Advert("", "Snow", "", "", "Snow.jpg");
-		    		Advert tstormAd = new Advert("", "Thunderstorm", "", "", "Thunderstorm.jpg");
-		    		
-		    		advertArray.add(clearAd);
-		    		advertArray.add(cloudsAd);
-		    		advertArray.add(drizzleAd);
-		    		advertArray.add(rainAd);
-		    		advertArray.add(snowAd);
-		    		advertArray.add(tstormAd);  	
-		    		
-		    		Advert extremelyFreezingAd = new Advert("", "", "Extremely Freezing", "", "ExtremelyFreezing.jpg");
-					Advert freezingAd = new Advert("", "", "Freezing", "", "Freezing.jpg");
-					Advert veryColdAd = new Advert("", "", "Very Cold", "", "VeryCold.jpg");
-					Advert coldAd = new Advert("", "", "Cold", "", "Cold.jpg");
-					Advert coolAd = new Advert("", "", "Cool", "", "Cool.jpg");
-					Advert warmAd = new Advert("", "", "Warm", "", "Warm.jpg");
-					Advert veryWarmAd = new Advert("", "", "Very Warm", "", "VeryWarm.jpg");
-					Advert hotAd = new Advert("", "", "Hot", "", "Hot.jpg");
-					Advert veryHotAd = new Advert("", "", "Very Hot", "", "VeryHot.jpg");
-					Advert ExtremelyHotAd = new Advert("", "", "Extremely Hot", "", "ExtremelyHot.jpg");
-					
-					advertArray.add(extremelyFreezingAd);
-					advertArray.add(freezingAd);
-					advertArray.add(veryColdAd);
-					advertArray.add(coldAd);
-					advertArray.add(coolAd);
-					advertArray.add(warmAd);
-					advertArray.add(veryWarmAd);
-					advertArray.add(hotAd);
-					advertArray.add(veryHotAd);
-					advertArray.add(ExtremelyHotAd);
-
-
-			        Advert veryHighEarningAd = new Advert("", "", "", "Very High Earning", "VeryHighEarning.jpg");
-					Advert highEarningAd = new Advert("", "", "", "High Earning", "HighEarningAd.jpg");
-					Advert lowEarningAd = new Advert("", "", "", "Low Earning", "LowEarning.jpg");
-					Advert veryLowEarningAd = new Advert("", "", "", "Very Low Earning", "VeryLowEarning.jpg");
-					
-					advertArray.add(veryHighEarningAd);
-					advertArray.add(highEarningAd);
-					advertArray.add(lowEarningAd);
-					advertArray.add(veryLowEarningAd);
+//					Advert winterAd = new Advert("winter", "", "", "", "Winter.jpg");
+//					Advert springAd = new Advert("spring", "", "", "", "Spring.jpg");
+//					Advert summerAd = new Advert("summer", "", "", "", "Summer.jpg");
+//					Advert autumnAd = new Advert("autumn", "", "", "", "Autumn.jpg");
+//					
+////					ArrayList<Advert> advertArray = new ArrayList<Advert>();
+//					advertArray.add(summerAd);
+//					advertArray.add(winterAd);
+//					advertArray.add(springAd);
+//					advertArray.add(autumnAd);
+//				 
+//				 Advert clearAd = new Advert("", "Clear", "", "", "Clear.jpg");
+//		    		Advert cloudsAd = new Advert("", "Clouds", "", "", "Clouds.jpg");
+//		    		Advert drizzleAd = new Advert("", "Drizzle", "", "", "Drizzle.jpg");
+//		    		Advert rainAd = new Advert("", "Rain", "", "", "Rain.jpg");
+//		    		Advert snowAd = new Advert("", "Snow", "", "", "Snow.jpg");
+//		    		Advert tstormAd = new Advert("", "Thunderstorm", "", "", "Thunderstorm.jpg");
+//		    		
+//		    		advertArray.add(clearAd);
+//		    		advertArray.add(cloudsAd);
+//		    		advertArray.add(drizzleAd);
+//		    		advertArray.add(rainAd);
+//		    		advertArray.add(snowAd);
+//		    		advertArray.add(tstormAd);  	
+//		    		
+//		    		Advert extremelyFreezingAd = new Advert("", "", "Extremely Freezing", "", "ExtremelyFreezing.jpg");
+//					Advert freezingAd = new Advert("", "", "Freezing", "", "Freezing.jpg");
+//					Advert veryColdAd = new Advert("", "", "Very Cold", "", "VeryCold.jpg");
+//					Advert coldAd = new Advert("", "", "Cold", "", "Cold.jpg");
+//					Advert coolAd = new Advert("", "", "Cool", "", "Cool.jpg");
+//					Advert warmAd = new Advert("", "", "Warm", "", "Warm.jpg");
+//					Advert veryWarmAd = new Advert("", "", "Very Warm", "", "VeryWarm.jpg");
+//					Advert hotAd = new Advert("", "", "Hot", "", "Hot.jpg");
+//					Advert veryHotAd = new Advert("", "", "Very Hot", "", "VeryHot.jpg");
+//					Advert ExtremelyHotAd = new Advert("", "", "Extremely Hot", "", "ExtremelyHot.jpg");
+//					
+//					advertArray.add(extremelyFreezingAd);
+//					advertArray.add(freezingAd);
+//					advertArray.add(veryColdAd);
+//					advertArray.add(coldAd);
+//					advertArray.add(coolAd);
+//					advertArray.add(warmAd);
+//					advertArray.add(veryWarmAd);
+//					advertArray.add(hotAd);
+//					advertArray.add(veryHotAd);
+//					advertArray.add(ExtremelyHotAd);
+//
+//
+//			        Advert veryHighEarningAd = new Advert("", "", "", "Very High Earning", "VeryHighEarning.jpg");
+//					Advert highEarningAd = new Advert("", "", "", "High Earning", "HighEarningAd.jpg");
+//					Advert lowEarningAd = new Advert("", "", "", "Low Earning", "LowEarning.jpg");
+//					Advert veryLowEarningAd = new Advert("", "", "", "Very Low Earning", "VeryLowEarning.jpg");
+//					
+//					advertArray.add(veryHighEarningAd);
+//					advertArray.add(highEarningAd);
+//					advertArray.add(lowEarningAd);
+//					advertArray.add(veryLowEarningAd);
 
 //					int minutes = 1;
 					
+				 
+				 
 				    String COMMA_DELIMITER = ",";
 				    String NEW_LINE_SEPARATOR = "\n";
 				     
@@ -301,20 +309,99 @@ public class mainClass {
 			 
 				    String csv = "LocationData.csv";
 			           					
-					Timer timer = new Timer();
-					timer.schedule(new TimerTask() {
-						 @Override
-						    public void run() {
-							 try {
+//					Timer timer = new Timer();
+//					timer.schedule(new TimerTask() {
+//						 @Override
+//						    public void run() {
+//							 try {
 								printData(fileToParse, csv);
-							} catch (IOException e) {
+//							} catch (IOException e) {
 								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						 }
-					}, 0, 300000);
+//								e.printStackTrace();
+//							}
+//						 }
+//					}, 0, 300000);
 			        
 //					showAd (path);
+					
+					
+					String advertToShowLabel = "";
+					
+					Advert familyAd = new Advert("Family", "Family.jpg");
+					 Advert clothesAd = new Advert("Clothes", "Clothes.jpg");
+					 Advert fastfoodAd = new Advert("FastFood", "FastFood.jpg");
+					 Advert holidaysAd = new Advert("Holidays", "Holidays.jpg");
+					 Advert luxurybrandsAd = new Advert("LuxuryBrands", "LuxuryBrands.jpg");
+					 
+					 advertArray.add(familyAd);
+					 advertArray.add(clothesAd);
+					 advertArray.add(fastfoodAd);
+					 advertArray.add(holidaysAd);
+					 advertArray.add(luxurybrandsAd);
+					
+					String labelFile = "C:/Users/Catríona/Downloads/Dissertation/outputLabels.csv";
+					
+					 BufferedReader br = null;
+				        String line = "";
+				        String cvsSplitBy = ",";
+				        String predLabel = "";
+
+				        try {
+
+				            br = new BufferedReader(new FileReader(labelFile));
+				            while ((line = br.readLine()) != null) {
+
+				                // use comma as separator
+				                String[] label = line.split(cvsSplitBy);
+				                
+				                predLabel = label[0];
+				                
+				            }
+
+				        } catch (FileNotFoundException e) {
+				            e.printStackTrace();
+				        } catch (IOException e) {
+				            e.printStackTrace();
+				        } finally {
+				            if (br != null) {
+				                try {
+				                    br.close();
+				                } catch (IOException e) {
+				                    e.printStackTrace();
+				                }
+				            }
+				        }
+				        predLabel = predLabel.replace("[", "");
+		                predLabel = predLabel.replace("]", "");
+//		                
+		                int numPredLabel = Integer.parseInt(predLabel);
+//		                System.out.println(numPredLabel);
+		                
+		                switch (numPredLabel) {
+		                case 1: advertToShowLabel = "Family";
+		                break;
+		                case 2: advertToShowLabel = "FastFood";
+		                break;
+		                case 3: advertToShowLabel = "LuxuryBrands";
+		                break;
+		                case 4: advertToShowLabel = "Holidays";
+		                break;
+		                default: advertToShowLabel = "Clothes";
+		                break;
+		                }
+		                
+//		                System.out.println(advertToShowLabel);
+		                
+		                for (int i=0; i<advertArray.size(); i++) {
+//		    			System.out.println("OUT "+advertArray.get(i).label);
+		                	if (advertArray.get(i).label.equals(advertToShowLabel)) {
+		                		path = advertArray.get(i).imageSrc;
+//		                		System.out.println("OUT "+advertArray.get(i).imageSrc);
+		                	}
+		                }
+//		                System.out.println(path);
+		                showAd(path);
+		    		
 	
 }
 	public static void printData(String fileToParse, String csv) throws IOException {
